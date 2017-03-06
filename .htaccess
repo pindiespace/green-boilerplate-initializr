@@ -1,5 +1,0 @@
-AuthName "GBP Initializr Login" 
-AuthType Basic 
-AuthUserFile /var/www/vhtdocs/userweb51371/html/.htpasswd 
-#AuthGroupFile /dev/null 
-require valid-user
