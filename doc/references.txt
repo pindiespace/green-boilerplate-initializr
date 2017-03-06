@@ -1,0 +1,542 @@
+/**
+ * ------------------------------------------------------------------------- 
+ * RATIONALLE
+ * -----------
+ * 
+ * the logic behind legacy user-agent sniffing
+ * http://infrequently.org/2011/01/cutting-the-interrogation-short/
+ *
+ * logic behind "hard" sniffing, followed by feature detection
+ * http://infrequently.org/2011/02/on-performance-innumeracy-false-positives/
+ *
+ * Theory - progressive enhancement
+ * http://filamentgroup.com/lab
+ *
+ * For W3C .hasFeature() API, and its problems
+ * http://reference.sitepoint.com/javascript/DOMImplementation/hasFeature
+ *
+ * Form Factor detection
+ * http://www.html5rocks.com/en/tutorials/detection/
+ *
+ * Browser profiling tool (provides scores for browsers on broad tests)
+ * http://www.browserscope.org
+ *
+ * For CSS3 support in older browsers
+ * http://css3clickchart.com/
+ *
+ * Detector - combines browser sniff with feature detection (like GBP)
+ * http://www.eduniverse.org/introducing-detector-combining-browser-feature-detection-your-web-app
+ *
+ * -------------------------------------------------------------------------
+ * DATA SOURCES - SERVER-SIDE
+ *
+ * Find My IP (uses MaxMind GeoIP database)
+ * http://fmbip.com/
+ *
+ * -------------------------------------------------------------------------
+ * DATA SOURCES - REFERENCE DATA FOR COMPARES
+ * ------------------------------------------
+ *
+ * HTTPArchive trends (could have another tool compute this in GBP)
+ * http://httparchive.org/trends.php
+ * 
+ *
+ * -------------------------------------------------------------------------
+ * DATA SOURCES - CLIENT/BROWSER LISTS
+ * ------------------------------------
+ *
+ * Comprehensive Desktop Browser List
+ * http://www.webdevelopersnotes.com/design/browsers_list.php3
+ *
+ * Mobile HTML5 Test (tested on real devices)
+ * http://mobilehtml5.org/
+ *
+ * HTML5 Test list
+ * http://beta.html5test.com/compare/feature/index.html
+ *
+ * Release dates for old browsers
+ * http://www.oldapps.com/category/browsers
+ *
+ * Big list of rare browser links
+ * http://www.phpkode.com/source/s/wp-useragent/wp-useragent/wp-useragent-detect-webbrowser.php
+ *
+ * Chrome release dates
+ * http://googlechromereleases.blogspot.com/
+ *
+ * Market share of IE6
+ * http://www.ie6countdown.com/
+ * 
+ * ------------------------------------------------------------------------- 
+ * DATA SOURCES - USER-AGENTS
+ * ---------------------------
+ *
+ * Mobilemedia - list of user agents (LAME)
+ * http://www.mobilemultimedia.be/
+ * 
+ * Descriptions and user-agents for rare browsers
+ * http://www.zytrax.com/tech/web/browser_ids.htm
+ *
+ * Lists of old funky user-agents
+ * http://www.user-agents.org/index.shtml
+ *
+ * HTML5test compare user agents
+ * http://beta.html5test.com/compare/feature/index.html
+ * 
+ * Big list of rare browser links
+ * http://www.phpkode.com/source/s/wp-useragent/wp-useragent/wp-useragent-detect-webbrowser.php
+ *
+ * Additional user-agents for handsets (like WURFL or DeviceAtlas)
+ * http://www.handsetdetection.com/
+ * 
+ * Descriptions and user-agents for rare browsers
+ * http://www.zytrax.com/tech/web/browser_ids.htm
+ *
+ * Bots vs. Browsers
+ * http://www.botsvsbrowsers.com/
+ * 
+ * User-Agent Strings
+ * http://user-agent-string.info/list-of-ua
+ * 
+ * Useragentsting
+ * http://www.useragentstring.com/pages/useragentstring.php
+ *
+ * a good summary of many user-agent strings with search patterns
+ * http://www.user-agents.org/index.shtml
+ *
+ * MyIP - great list of rare user-agents
+ * http://myip.ms u:pindiespace@yahoo.com p:Rbmvc1ws 
+ * 
+ * ------------------------------------------------------------------------- 
+ * DATA SOURCES - USER-AGENT REGEX
+ * --------------------------------
+ *
+ * platform.js tests (includes a VERY large set of UAs)
+ * https://github.com/bestiejs/platform.js/blob/master/test/test.js
+ *
+ * Zytrax Regex for user-agents
+ * http://www.zytrax.com/tech/web/regex.htm
+ *
+ * UA-Parser a library implementing "hard" sniffing for old fossil browsers
+ * CONTAINS REGEX (if installed and yaml downloaded)
+ *
+ * -------------------------------------------
+ * DATA SOURCES - HTML AND CSS properties
+ * --------------------------------------
+ *
+ * Quirksmode mobile browser market support
+ * http://quirksmode.org/mobile/mobilemarket.html
+ *
+ * W3C Mobile web compatibility test scores (2010)
+ * http://www.w3.org/2010/01/results-wctmb2
+ *
+ * CSS support (old, about 2005)
+ * http://www.browsersupport.net/
+ *
+ * MyUMBC blog
+ * http://my.umbc.edu/groups/web-dev/news?page=10&section=members
+ *
+ * Browserlinks Modernizr (links to code)
+ * http://www.browserleaks.com/modernizr
+ * 
+ * MDN Mozilla HTML (awesome)
+ * https://developer.mozilla.org/en-US/docs/Web/HTML
+ *
+ * Sitepoint CSS (awesome)
+ * http://reference.sitepoint.com/css
+ *
+ * MDN Mozilla CSS (awesome)
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference
+ *
+ * CSS1
+ * http://129.69.59.141/css1pqre.htm
+ *
+ * CSS1, CSS2, CSS3
+ * http://www.cssportal.com/css-properties/index.php
+ *
+ * Comprehensive CSS list (from 2003)
+ * http://www.blooberry.com/indexdot/css/index.html
+ *
+ * ------------------------------------------------------------------------- 
+ * DATA SOURCES - JAVASCRIPT FEATURE DETECTION
+ * --------------------------------------------
+ *
+ * W3C test suite
+ * http://www.w3.org/wiki/HTML/Testing
+ * https://github.com/w3c/web-platform-tests
+ *
+ * JavaScript AND JScript common feature tests
+ * https://github.com/kangax/cft/
+ * 
+ * CANIUSE BETA - more feature detection, browser stats, connection to has-js tests
+ * http://beta.caniuse.com
+ *
+ * CANIUSE - feature detection
+ * http://caniuse.com/
+ *
+ * Modernizr Reference tests (these have the images, also compare Modernizr results to canIuse database)
+ * http://modernizr.github.io/Modernizr/test/
+ * 
+ * Stack Overflow Feature Detection search
+ * http://stackoverflow.com/questions/tagged/feature-detection?page=1&sort=newest&pagesize=15
+ *
+ * JScript version detect
+ * http://stackoverflow.com/questions/1843247/cc-on-and-ie6-detection
+ * 
+ * tests for some cutting-edge APIs
+ * http://daker.me/2013/06/5-html5-javascript-apis-to-keep-an-eye-on.html
+ *
+ * Browserleaks - a variety of "interesting" tests to fingerprint a browser
+ * http://www.browserleaks.com/
+ *
+ * Detect events without browser sniffing
+ * http://perfectionkills.com/detecting-event-support-without-browser-sniffing/
+ *
+ * MobileESP - javascript compliment to PHP mdetect (Anthony Hand)
+ * Main MobileESP site - http://blog.mobileesp.com/
+ * https://code.google.com/p/mobileesp/source/browse/JavaScript/mdetect.js
+ * API
+ * http://www.hand-interactive.com/detect/mobileesp_demo_php.htm
+ *
+ * Accessify.js - test for aria/accessibility features
+ * https://github.com/yatil/accessifyhtml5.js/blob/master/accessifyhtml5.js
+ *
+ * Robyman testings (fullscreen api, others)
+ * https://github.com/robnyman/robnyman.github.com
+ *
+ * HTML5test.com testings
+ * https://github.com/NielsLeenheer/html5test/blob/version-4.0/scripts/engine.js
+ *
+ * Generalized Feature Detection IMPORTANT
+ * http://michaux.ca/articles/feature-detection-state-of-the-art-browser-scripting
+ *
+ * Snack.js - example of small, but complete JS library
+ * http://snackjs.com/
+ *
+ * Browserleaks
+ * http://www.browserleaks.com/javascript
+ *
+ * ASP.NET version
+ * http://fiftyone.apachemobilefilter.org/
+ *
+ * HTML5Please API (use CANIUSE.com tables)
+ * http://api.html5please.com/
+ *
+ * W3C Platform tests by Tobie Langel
+ * https://github.com/w3c/web-platform-tests
+ *
+ * Modernizr feature detection library ADDITIONAL JS tests
+ * https://github.com/Modernizr/Modernizr/tree/master/feature-detects
+ *
+ * HAAR.js (FACE recognition!)
+ * https://github.com/foo123/HAAR.js
+ *
+ * Dive into HTML5 tests
+ * http://diveintohtml5.info/detect.html
+ *
+ * Mobile HTML5 table support by Maximiliano Firtman
+ * http://mobilehtml5.org/
+ *
+ * Haz - uses modernizr to run online tests
+ * http://haz.io/
+ *
+ * Ringmark
+ * http://www.rng.io/
+ *
+ * full ECMAScript test suite
+ * http://test262.ecmascript.org/
+ *
+ * has.js
+ * https://github.com/phiggins42/has.js
+ * 
+ * HasJS feature detection library
+ * https://github.com/phiggins42/has.js/tree/master/detect
+ * 
+ * HasJS Unit tests
+ * http://jsperf.com/has-js-suite
+ *
+ * For CSS3 support in older browsers
+ * http://css3clickchart.com/
+ * 
+ * older browser support
+ * http://www.webdevout.net/browser-support#html
+ * 
+ * Browser profiling tool (provides scores for browsers on broad tests), Uses ua-parser
+ * http://www.browserscope.org
+ *
+ * Uber.js - includes require.js, plus
+ * lots of original tests in /tree/master/lib
+ * https://github.com/phiggins42/uber.js
+ * 
+ * BestieJS - platform.js has smaller feature detection library 
+ * https://github.com/bestiejs/platform.js
+ *
+ * platform.js tests (includes a VERY large set of UAs)
+ * https://github.com/bestiejs/platform.js/blob/master/test/test.js
+ *
+ * ECMAScript compatibility table
+ * http://kangax.github.io/es5-compat-table/
+ *
+ * Modernizr - 'undetectables'
+ * https://github.com/Modernizr/Modernizr/wiki/undetectables
+ * 
+ * For W3C .hasFeature() API, and its problems
+ * http://reference.sitepoint.com/javascript/DOMImplementation/hasFeature
+ *
+ * ------------------------------------------------------------------------- 
+ * DATA SOURCES - PHP FEATURE DETECTION
+ * -------------------------------------
+ *
+ * MDetect - PHP solution, good in its use of obvious keywords to
+ * sniff the useragent string.(add in as sister library?)
+ *
+ * Part of MobileESP - http://blog.mobileesp.com/
+ * https://code.google.com/p/mobileesp/source/browse/PHP/mdetect.php
+ *
+ * IsMobile - fast detect for mobile
+ * https://github.com/justindocanto/isMobile
+ *
+ * API
+ * http://www.hand-interactive.com/detect/mobileesp_demo_php.htm
+ * 
+ * Example
+ * http://blog.mobileesp.com/?p=177
+ *
+ * Mobile Detect - lightweight mobile detector class
+ * https://github.com/serbanghita/Mobile-Detect
+ *
+ * Detect Mobile Browsers (just a simple UA sniff for mobile browser keywords)
+ * http://detectmobilebrowsers.com/
+ *
+ * Derivative from
+ * http://www.brainhandles.com/techno-thoughts/detecting-mobile-browsers#code
+ *
+ * WURFL
+ * http://wurfl.sourceforge.net/php_index.php
+ *
+ * PHP Script
+ * http://sourceforge.net/projects/wurfl/files/WURFL%20PHP/1.4/wurfl-php-1.4.1.zip/download
+ *
+ * Opera - server-side detection for mobile devices
+ * http://dev.opera.com/articles/view/server-side-capability-detection-for-mob/
+ * http://dev.opera.com/articles/view/server-side-capability-detection-for-mob-1/
+ *
+ * Detect mobile browser capabilities
+ * http://stackoverflow.com/search?q=detect+mobile+browser+capabilities
+ *
+ * HandsetDetection site
+ * http://www.handsetdetection.com/
+ *
+ * HTML5test user-agent sniffing (Anthony Hand, very well-organized for specified subset of detection)
+ * https://github.com/NielsLeenheer/html5test/blob/version-4.0/scripts/useragents/useragents.lib.php
+ * 
+ * PHP port of UA-Parser feature detection library
+ * https://github.com/tobie/ua-parser/tree/master/php
+ *
+ * Detector project JS Modernizr plus PHP combined (similar to GBP)
+ * http://detector.dmolsen.com/
+ * 
+ * Full-bodied mobile detection
+ * https://code.google.com/p/php-mobile-detect/wiki/SourceCode?tm=2
+ *
+ *
+ * -------------------------------------------------------------------------
+ * DATA SOURCES - UA SNIFFING
+ * ---------------------------
+ *
+ * ua-parser regexes for numerous user-agents
+ * https://github.com/tobie/ua-parser/blob/master/regexes.yaml
+ *
+ * ------------------------------------------------------------------------- 
+ * DATA SOURCES - RELEASE DATES
+ * -----------------------------
+ * 
+ * Release dates for old browsers
+ * http://www.oldapps.com/category/browsers
+ *
+ * Lists of old funky user-agents
+ * http://www.user-agents.org/index.shtml
+ * 
+ * Chrome release dates
+ * http://googlechromereleases.blogspot.com/
+ * 
+ * --------------------------------------------------------------------------
+ * DATA SOURCES - BROWSER MARKET SHARE & INTERNET USERS
+ * ----------------------------------------------------
+ * 
+ * Market share of IE6
+ * http://www.ie6countdown.com/
+ *
+ *
+ * --------------------------------------------------------------------------
+ * DATA SOURCES - INTERNET USERS
+ * -----------------------------------------------
+ *
+ * The Web Index
+ * http://thewebindex.org/
+ *
+ * Web Index Dataset
+ * http://thewebindex.org/data/downloads/
+ *
+ * CIA Estimate of Internet Users (inaccurate)
+ * https://www.cia.gov/library/publications/the-world-factbook/rankorder/2153rank.html
+ *
+ * -------------------------------------------------------------------------
+ * DATA SOURCES- EMULATORS
+ *
+ * Good, somewhat outdated, emulator list by Maximiliano Firtman
+ * http://www.mobilexweb.com/emulators
+ *
+ * -------------------------------------------------------------------------
+ * DATA SOURCES - Ui Appearance code
+ * ----------------------------------
+ *
+ * Haz does it one way
+ * http://haz.io/
+ * 
+ * use the topic and paragraph CSS style here
+ * http://www.mobilexweb.com/blog/android-browser-eternal-dying#more-254
+ *
+ * ------------------------------------------------------------------------- 
+ * GBP - WRITING JS POLYFILLS
+ * ---------------------------
+ *
+ * Grunt.js
+ * http://daker.me/2013/06/gruntjs-takes-your-workflow-to-the-next-level.html
+ *
+ * JS Beautifier (un-minify)
+ * http://jsbeautifier.org/
+ *
+ * Prototype.js - good JSON (unicode encryptor/decryptor)
+ * https://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js
+ * 
+ * base64.js - very compact base64 encoder
+ * https://github.com/davidchambers/Base64.js/blob/master/base64.js
+ *
+ * nibbler.js - multibase encoder/decoder
+ * http://www.tumuski.com/library/Nibbler/Nibbler.js
+ *
+ * debug.js - javascript testing library (e.g. globals detector)
+ * https://github.com/jeromeetienne/debug.js
+ * http://blog.jetienne.com/blog/2013/04/23/debug-dot-js-global-detection/
+ *
+ * The JSON3 Library from bestie.js
+ * https://github.com/bestiejs/json3
+ *
+ * Small JSON.stringify replacement (good regexps)
+ * http://www.thomasfrank.se/downloadableJS/jsonStringify.js
+ *
+ * Browser "Navigator" or "Browser" properties (client-side JS)
+ * http://help.dottoro.com/ljglevrj.php
+ *
+ * HTTPOnly Cookie headers
+ * http://www.codinghorror.com/blog/2008/08/protecting-your-cookies-httponly.html
+ *
+ * Securing PHP cookies against XSS attack
+ * http://nativephp.com/archives/8
+ *
+ * cross-browser event listener with design patterns
+ * http://javascriptrules.com/2009/07/22/cross-browser-event-listener-with-design-patterns/
+ *
+ * Developer's guide to writing cross-browser polyfills
+ * http://addyosmani.com/blog/writing-polyfills/
+ *
+ * -------------------------------------------------------------------------
+ * GBP - RECOMMENDED POLYFILLS
+ *
+ * Automate responsive images with mobify.js
+ * http://my.umbc.edu/groups/web-dev/news/37431
+ * http://www.mobify.com/mobifyjs/v2/docs/image-resizer/
+ * 
+ *
+ * General polyfill library CHECK IT OUT, REVISE INITIALIZR
+ * https://github.com/inexorabletash/polyfill
+ *
+ * Video player
+ * http://videojs.com/
+ *
+ * Caption video
+ * http://captionatorjs.com/
+ *
+ * WebP
+ * http://libwebpjs.hohenlimburg.org/
+ *
+ * WebM
+ * http://libwebpjs.hohenlimburg.org/vp8/webm-javascript-decoder/
+ *
+ * H.264 (Broadway.js)
+ * https://github.com/mbebenita/Broadway
+ *
+ * HTML5 Video Captions
+ * http://captionatorjs.com/
+ *
+ * MediaElement.js
+ * http://mediaelementjs.com/
+ *
+ * Shadowbox - media players
+ * http://www.shadowbox-js.com/index.html
+ *
+ * -------------------------------------------------------------------------
+ * GBP - UNIT TESTS FOR GBP
+ * ------------------------
+ * 
+ * Browsershots
+ * http://www.browsershots.org
+ *
+ * Popular testing libraries
+ * http://www.netmagazine.com/features/essential-javascript-top-five-testing-libraries
+ *
+ * Microemu JRE emulator
+ * https://code.google.com/p/microemu/downloads/list
+ *
+ * Install JRE emulator (and local Opera Mini)
+ * http://sharovatov.wordpress.com/2012/10/17/installing-opera-mini-emulator-locally/
+ *
+ * Opera Mini simulator
+ * http://www.opera.com/developer/opera-mini-simulator
+ *
+ * Opera mobi simulator
+ * http://www.opera.com/developer/mobile-emulator
+ *
+ * Install UCWeb (awesome, remember to put in "app" folder in microemu)
+ *http://www.tecmaximum.com/2011/01/tutorial-ucweb-on-pc-via-microemulator.html
+ *
+ * UCWeb historical (true site)
+ * http://wap.ucweb.com/index.php?bid=354&SESSID=g61sahbdmeiq3pepluufo89le7&uc_param_str=pfbivess&action=VersionList&product=ucbrowser&model=22148&lang=english&from=wap-slb-ver-unp
+ *
+ * -------------------------------------------------------------------------
+ * Browser Testing libraries
+ * -------------------------
+ *
+ * J2Me emulator and testing environment
+ * http://www.microemu.org/#
+ *
+ * -------------------------------------------------------------------------
+ * OPTIMIZATIONS - JavaScript
+ * ----------------------------------
+ *
+ * use
+ * http://jsperf.com/dot-vs-square-bracket/5
+ *
+ * regex.test() is FASTER than regex.match()
+ *
+ * window.anything is SLOW
+ *
+ * object.prop is FASTER than object["prop"] (latter has to be set up at runtime)
+ *
+ * -------------------------------------------------------------------------
+ * SECURITY - PHP
+ * -------------------------------------------------------------------------
+ * Heavy-handed approach to PHP security
+ * http://chris-allen-lane.com/2012/05/a-heavy-handed-approach-to-sanitization-in-php/
+ * 
+ * 5G .htaccess
+ * http://perishablepress.com/5g-blacklist-2013/
+ * 
+ * -------------------------------------------------------------------------
+ * EDITING ENVIRONMENT
+ * Fixing Komodo to use 1 cpu
+ * http://www2.robpol86.com/guides/ImageCFG/
+ * -------------------------------------------------------------------------
+ *
+ *
+ */

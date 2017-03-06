@@ -1,0 +1,26 @@
+/* humanstxt.org */
+
+/* TEAM */
+
+Name: 		eg: Pete Markiewicz
+Site:			eg: http://greenboilerplate.com
+Twitter:		eg: @pindiespace
+Location:		eg: USA
+
+/* THANKS */
+
+
+/* SITE */
+
+Standards: 
+
+HTML5
+CSS3
+PHP/MySQL
+
+Components: 
+
+320 and Up: 		http://stuffandnonsense.co.uk/projects/320andup 
+Font Awesome: 		http://fortawesome.github.com/Font-Awesome
+Green Boilerplate:      http://greenboilerplate.com
+Modernizr: 		http://modernizr.com (initialized via Green Boilerplate)

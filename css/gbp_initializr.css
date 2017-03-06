@@ -1,0 +1,952 @@
+@charset "utf-8";
+
+/**
+ * -------------------------------------------------------------------------
+ * css reset
+ * ------------------------------------------------------------------------- 
+ */
+html, body, body div,span,
+object,iframe,
+img,
+h1,h2,h3,h4,h5,h6,
+p,blockquote,pre,abbr,address,cite,code,
+em,ins,kbd,q,del,dfn,
+samp,small,strong,sub,sup,var,b,i,
+dl,dt,dd,ol,ul,li,
+fieldset,form,label,legend,
+table,caption,tbody,tfoot,thead,tr,th,td,
+article,aside,figure,footer,header,hgroup,menu,nav,section,
+time,mark,
+audio,video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;	
+	vertical-align: baseline;
+	line-height:1.5;
+	background: transparent;
+}
+
+/* comprehensive clearfix */
+
+.clearfix {
+	*zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+	display: table;
+	content: "";
+}
+.clearfix:after {
+	clear: both;
+}
+
+/* basic HTML styling */
+
+html {
+	font-size:62.5%;
+	-webkit-overflow-scrolling: touch;
+	-webkit-tap-highlight-color: #f3f5f6;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size: 16px;
+	font-size: 1.6rem;
+	line-height: 1.5em;
+	color: #000000;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: inherit;
+	font-weight: bold;
+	color: inherit;
+	text-rendering: optimizelegibility;
+}
+
+h1,.h1 {
+	font-size: 2em;
+	line-height: 1.2;
+}
+
+
+h2,.h2 {
+	font-size: 1.15em;
+	line-height: 1.2;
+}
+
+h3,.h3 {
+	font-size: 1em;
+	margin-bottom: 1em;
+	line-height: 1.3;
+}
+
+h4,.h4 {
+	font-size: 1em;
+	margin-bottom: 1.5em;
+	line-height: 1.25;
+}
+
+h5,.h5 {
+	font-size: 0.9em;
+	margin-bottom: 1.5em;
+}
+
+h6,.h6 {
+	margin-bottom: 1.5em;
+	font-size: 0.8em;
+	font-weight: normal;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+
+/**
+ * -------------------------------------------------------------------------
+ * beginning of custom GBP styles
+ * ------------------------------------------------------------------------- 
+ */
+ 
+body {
+	background-color:#3d5748;
+}
+
+.hidden {
+	display:none;
+}
+
+.block-visible {
+	display:block;
+}
+
+.inline {
+	display:inline;
+}
+
+.inline-block {
+	display:inline-block;
+}
+
+.greened {
+	color: #cdefd9;
+}
+
+.greyed {
+	color:#ddd;
+}
+
+/* inactive hyperlink */
+.greyed-link {
+	color:#ddd;
+}
+
+.active-link {
+	color:#000;
+}
+
+/* highlight of text (e.g. a button for "reference" on some screens) */
+
+.mini-highlight {
+	font-size:75%;
+	padding: 0.1em 0.3em 0.1em 0.3em;
+	display: inline-block;
+	background-color:#FF9;
+	border-radius:0.5em;
+}
+
+/* title for the page*/
+
+h1#app-name {
+	color:#eee;
+	letter-spacing:0.15em;
+	padding-bottom:0;
+	margin:0 6px 0.7em 0.25em;
+	border-bottom:1px solid #bbb;
+}
+
+
+/**
+ * -------------------------------------------------------------------------
+ * create a temp popup window during ajax calls 
+ * background images in CSS don't display immediately, so the 
+ * spinner-win element has a foreground image that is 64px wide. 
+ * it is centered in the element using the .spinner-win img - modify
+ * if the size of the image is changed.
+ * ------------------------------------------------------------------------- 
+ */
+
+.spinner-win {
+	display:none;
+	visibility: hidden;
+	position:absolute;
+	width:70px;          /* adjust as per your needs */
+	height:70px;         /* adjust as per your needs */
+	border-radius: 4px;
+	box-shadow:  2px 2px 4px 2px rgba(55, 55, 55, 0.5);
+	background-color:white;
+	z-index: 9999;        /* above everything else */
+}
+
+.spinner-win img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -32px;
+	margin-top: -32px;
+}
+
+/* a small div in row fields being updated */
+.spinner-div {
+	width:25px;
+	padding:0;
+}
+
+.spinner-div img {
+	margin:0;
+}
+
+/**
+ * -------------------------------------------------------------------------
+ * create a temp reference window, with hyperlinks
+ * connected to the current datum
+ * -------------------------------------------------------------------------
+ */
+ 
+.reference-window {
+	display:none;
+	position:absolute;
+	top:0;
+	left:0;
+	width:800px;
+	/*height:200px*/
+	padding:2em;
+	border:4px solid #aaa;
+	border-radius:8px;
+	background-color:white;
+	z-index: 1;	
+}
+
+/* div holding close button */
+
+.reference-close {
+	width:100%;
+	text-align:right;
+	margin-top:0.5em;
+	margin-bottom:0;
+}
+
+/* close button for reference window */
+
+#reference-close-button {
+	display:inline;
+	padding:0.25em 0.5em 0.25em 0.5em;
+}
+
+
+/** 
+ * -------------------------------------------------------------------------
+ * create a modal alert poppup
+ * -------------------------------------------------------------------------
+ */
+.poppup {
+	display:none;
+	position:absolute;
+	top:0;
+	left:0;
+	width:250px;
+	height:200px;
+	padding:2em 1em 1em 1em;
+	border:4px solid #aaa;
+	border-radius:8px;
+	background-color:white;
+	z-index: 1;	 
+}
+
+.poppup-title {
+	font-size:120%;
+	margin-left:0.8em;
+}
+ 
+.poppup-content {
+	width:95%;
+	height:79%;
+	overflow:auto;
+}
+
+.poppup-win-buttons {
+	text-align:right;
+	margin:0.5em 2em 0.5em 0.5em;
+}
+
+/* default "close" button on poppup */
+#poppup-close-button {
+	display:inline;
+	text-align:right;
+}
+
+/* action button, only needed for some poppup windows */
+#poppup-action-button {
+	display:none;
+	visibility:hidden;
+}
+
+/**
+ * -------------------------------------------------------------------------
+ * tabbed menus
+ * ------------------------------------------------------------------------- 
+ */
+ 
+.menu-tab ul {
+	width:960px;
+	padding-left:1em;
+}
+
+.menu-tab li {
+	list-style:none;
+	text-decoration: none;
+	padding:0.15em 0.25em 0 0.25em;
+	display:inline-block;
+	margin: 0 0.8em 1px 0.8em; /*push up 1 pixel to create tab line */
+	border-radius: 0.25em 0.25em 0 0;
+}
+
+.menu-tab li:hover {
+	color:#fff;
+	background-color:#B5F3B1;
+}
+
+.menu-tab a {
+	text-decoration: none;
+	color:black;
+}
+
+.menu-tab a:visited {
+	color:#333;
+}
+
+.tab-active {
+	background-color:#B5F3B1;
+	border-left:1px solid #f0faf0;
+	border-top:1px solid #f0faf0;
+	border-right:1px solid #f0faf0;
+	border-bottom: 1px solid #B5F3B1;
+}
+
+.tab-inactive {
+	border-bottom:1px solid #5e8763;
+	background-color:#85BA8B;	
+}
+
+/*holds content for a tab*/
+
+section#tab {
+	background-color:#B5F3B1;
+	padding:1em;
+	border-radius: 0.45em 0.45em 0 0;
+	border-bottom: 1px solid #063;
+	margin-left:3px;
+	margin-right:3px;
+	/*min-width:860px;*/
+}
+
+
+/**
+ * -------------------------------------------------------------------------
+ * horizontal menu for sub-options
+ * ------------------------------------------------------------------------- 
+ */
+ 
+.horizontal-menu ul {
+	font-size:85%;
+ 	list-style-type: none;
+	margin-top:1em;
+ 	border: 1px solid #000;
+ 	border-radius:6px;
+	padding:1px 0.25em 1px 0.25em;
+	cursor:default;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(25%, #f2f5c7), color-stop(100%, #cdcfa8));
+	background:-moz-linear-gradient(center top, #f2f5c7 25%, #cdcfa8 100%);
+	background:-ms-linear-gradient(top, #f2f5c7 25%, #cdcfa8 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2f5c7', endColorstr='#cdcfa8');
+	background: linear-gradient(to bottom, #f2f5c7 25%, #cdcfa8 100%);  /* w3c */
+	background-color:#cdcfa8;
+	box-shadow:0 0 0.2em #666;
+}
+
+.horizontal-menu li {
+ 	border-right:1px solid black;
+ 	display:inline-block;
+	margin:0 0 0 -0.29em;
+	padding:0.25em 0.5em 0.25em 0.5em;
+	text-align: center;
+}
+
+.horizontal-menu li a {
+	color:#000;
+	
+	padding:0.5em;
+	text-decoration: none;
+}
+
+.horizontal-menu li:hover,
+.horizontal-menu li:active {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(25%, #cdcfa8), color-stop(100%, #f2f5c7));
+	background:-moz-linear-gradient(center top, #cdcfa8 25%, #f2f5c7 100%);
+	background:-ms-linear-gradient(top, #cdcfa8 25%, #f2f5c7 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#cdcfa8', endColorstr='#f2f5c7');
+	background: linear-gradient(to bottom, #cdcfa8 25%, #f2f5c7 100%); /* w3c */	
+	background-color:#f2f5c7;
+
+}
+
+.horizontal-menu li:visited {
+	color:#666;
+}
+
+
+/*
+ * -------------------------------------------------------------------------
+ * nice buttons inside tables and panels
+ * -------------------------------------------------------------------------
+ */
+
+.subb {
+	color:#000;
+	font-size:0.85em;
+	font-family:Arial;
+	font-weight:normal;
+	-moz-border-radius:0.2em;
+	-webkit-border-radius:0.2em;
+	border-radius:0.2em;
+	border:1px solid #666;
+	margin:0;
+	padding:0.15em 0.3em;
+	text-decoration:none;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(25%, #f2f5c7), color-stop(100%, #cdcfa8));
+	background:-moz-linear-gradient(center top, #f2f5c7 25%, #cdcfa8 100%);
+	background:-ms-linear-gradient(top, #f2f5c7 25%, #cdcfa8 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2f5c7', endColorstr='#cdcfa8');
+	background: linear-gradient(to bottom, #f2f5c7 25%, #cdcfa8 100%);  /* w3c */
+	background-color:#cdcfa8;
+	box-shadow:0 0 0.2em #666;
+	display:inline-block;
+}
+
+.subb:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(25%, #cdcfa8), color-stop(100%, #f2f5c7));
+	background:-moz-linear-gradient(center top, #cdcfa8 25%, #f2f5c7 100%);
+	background:-ms-linear-gradient(top, #cdcfa8 25%, #f2f5c7 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#cdcfa8', endColorstr='#f2f5c7');
+	background: linear-gradient(to bottom, #cdcfa8 25%, #f2f5c7 100%); /* w3c */	
+	background-color:#f2f5c7;
+}
+
+.subb:active {
+	position:relative;
+	top:1px;
+}
+
+
+/**
+ * -------------------------------------------------------------------------
+ * page footer
+ * ------------------------------------------------------------------------- 
+ */
+ 
+#page-footer {
+	font-size:75%;
+	padding:1em;
+	background-color:#ddd;
+	color:black;
+	border-left:3px solid #063;
+	border-right:3px solid #063;
+	border-bottom:3px solid #063;
+	border-radius: 0 0 0.65em 0.65em;
+	
+	/*
+	 position at bottom:
+	 width:100%;
+	 position: absolute;
+	 height: 80px;
+	 clear:both;
+	 top:100%;
+	 */
+}
+
+
+/**
+ * -------------------------------------------------------------------------
+ * area above the first row of all forms
+ * ------------------------------------------------------------------------- 
+ */
+.form-header {
+	border-bottom: 1px solid #666;
+	padding-bottom:0.25em;
+	margin:0 0 0.5em 0;
+}
+
+/* yellow box, red border, in the upper-right corner*/
+
+#err-list {
+	background-color:#F7FCBA;
+	border:1px solid #FC3;
+	float:right;
+	font-size:75%;
+	width:44%;
+	padding:0.25em;
+	margin-right:1.0em;
+}
+
+/**
+ * -------------------------------------------------------------------------
+ * content panels (typically a form or a fieldset inside a form)
+ * ------------------------------------------------------------------------- 
+ */
+
+/* outer panels, grouping inner panels */
+
+.outer-panel {
+	padding:0;
+}
+
+/* panels, typically a form or fieldset in the form */
+
+.highlight-panel {
+	background-color:#eaedc2;
+	padding:0.5em;
+	border:1px solid #666;
+	border-radius:4px;
+	margin:0 0.5em 0.5em 0;
+	box-shadow:0 0 5px #666;
+}
+
+/* when a fieldset forms a panel */
+
+.highlight-panel legend {
+	font-size:1.0em;
+}
+
+/* first row, property edit */
+
+/* property edit,  first row, at top of prop edit form, property, source, component, database */
+
+#property-list-box {
+	margin-top:0;
+	padding:0; /* needed for alignment, along with property-box */
+	width:40%;
+	float:left;
+}
+
+/* property edit, the left side of the top box, property list */
+
+#select-property {
+}
+
+/* second row edit property */
+
+/* second row, the box containing property fields, alt-source, dependencies */
+
+#property-box {
+	padding:0; /* needed for alignment, along with property-box */
+}
+
+/* margin needs to be shimmed for right-hand panels in property-box */
+
+#gbp-property, #gbp-alt-source, #gbp-dependency {
+	margin-top:0;
+	margin-right:0;
+}
+
+#datatype-right {
+	float:right;
+}
+
+/* floats dependency menu to the right of the dependency table */
+
+#dependency-new {
+	margin-top:0;
+	float:right;
+}
+
+/* options for a property */
+
+.underline {
+	margin-top:1.0em;
+	border-bottom:1px solid black;
+}
+
+.fullwidth {
+	width:100%;
+}
+
+.center {
+	text-align:center;
+	vertical-align: middle;
+	position: relative;
+}
+
+#options label, input, select {
+	display:inline-block;
+	margin:0 0.5em 0.2em 0;
+	padding:0;
+}
+
+/* styles for config box in utilities */
+
+.config-box {
+	width:100%;
+}
+
+.config-left {
+	width:40%;
+	float:left;	
+}
+
+.config-right {
+	width:60%;
+	float:right;
+}
+
+/* accordion pattern in utilities */
+
+.accordion-closed {
+	display:none;
+	visibility:hidden;
+}
+
+.accordion-open {
+	display:block;
+	visibility:true;
+	-webkit-transition: 0.5s;
+	-moz-transition: 0.5s;
+	-ms-transition: 0.5s;
+	-o-transition: 0.5s;
+        transition: 0.5s;
+}
+
+
+/**
+ * -------------------------------------------------------------------------
+ * specific tables
+ * -------------------------------------------------------------------------
+ */
+
+#import-fulltests-table {
+	font-size:75%;
+}
+
+#import-fulltests-commit-table {
+	margin-left:0;
+}
+
+/**
+ * -------------------------------------------------------------------------
+ * general table styles
+ * ------------------------------------------------------------------------- 
+ */
+ 
+table {
+	width:100%;
+	font-size:0.85em;
+	*border-collapse:collapse;
+	border-spacing: 0;
+	border:1px solid #ccc;
+}
+
+table label {
+	font-size:1.0em;
+}
+
+th {
+	color:#444;
+	text-align:left;
+	padding: 0.25em 0.5em 0.25em 0.15em;
+	background-color:white;
+	border-bottom:2px solid #ccc;
+	border-right:1px solid #ddd;
+}
+
+/* table for dependency list */
+
+td {
+	padding:0.15em 0.25em 0 0.15em;
+	background-color:#eee;
+	vertical-align:middle;
+	border-bottom:3px solid #ddd;
+}
+
+td input, button {
+	margin-bottom:0;
+}
+
+td select {
+	margin-bottom:0;
+}
+
+td.leftmost {
+	background-color:#fff;
+	text-align:right;
+}
+
+/* for the tables in the big lists*/
+
+td.leftmost2 {
+	width:5%;
+	text-align:right;
+}
+
+/* for merged columns with "select all" buttons */
+
+td.select-all {
+	background-color:#fff;
+	vertical-align:bottom;
+	text-align:left;
+}
+
+td.select-all input[type=button] {
+	display:inline;
+	margin:0;
+	color:white;
+	background-color:black;
+	letter-spacing:0.5em;
+}
+
+
+/* enclosing div for inline tables (gives 2 columns) */
+
+div.component-row-div {
+	margin-top:2em;
+	width:100%;
+	display:block;
+}
+
+/* table with properties listed by component */
+
+table.component-table {
+	width:45%;
+	position:relative;
+	vertical-align:top;
+	display:inline-block;
+	margin: 0 1em 1em 1em;
+	border:2px solid black;
+	border-radius:8px 8px 0px 0px;
+}
+
+table.thead {
+	top:-1.45em;
+}
+
+caption {
+	top: -1.45em; /*this moves the caption ABOVE the table box*/
+	padding:0;
+	margin-bottom:0;
+	position:relative;
+}
+
+/* rounded top on tables in configurator, delete */
+.table-tab {
+	padding:0.25em 1em 0 1em;
+	border-radius: 8px 8px 0px 0px;
+	background-color:black;
+	color:white;	
+}
+
+table#delete-property {
+	margin-top:2em;
+}
+
+/**
+ * -------------------------------------------------------------------------
+ * additional form field styling
+ * ------------------------------------------------------------------------- 
+ */
+ 
+form {
+}
+
+
+fieldset {
+	position:relative;
+	margin:0.5em;
+	padding:0.25em;
+}
+
+legend {
+	font-size:1.25em;
+	text-transform:uppercase;
+	padding:0.1em;
+}
+
+fieldset > legend {
+	float:left;
+	margin:0 0 0.5em 0;
+}
+
+fieldset > legend + * {
+        clear:both;
+}
+
+.form-note {
+	font-size:80%;
+}
+
+#sub-field {
+	background-color:#063;
+	border-radius: 0.25em;
+	text-align:center;
+}
+
+#sub-field input {
+	margin-top:0.5em;
+	padding:0.58em;
+}
+
+label {
+	font-size:0.85em;
+	display:block; /*works better than doing this to all possible form tags*/
+	color:#333;
+	margin-top:1em;
+	margin-bottom:0.25em;
+}
+
+label:first-letter { 
+	font-weight:bolder; 
+}
+
+input, textarea, select {
+	display:block;
+	margin-bottom:0.5em;
+}
+
+/* inline labeled controls  (not in a table) */
+
+.inline-input {
+	display:inline;
+}
+
+input:focus {
+	background-color:#FFC;
+}
+
+/* fields disabled for input */
+input.disabled {
+	background-color:#B5F3B1;	
+}
+
+input.enabled {
+	background-color: #fff;	
+}
+
+select {
+
+}
+
+
+/*client editing window*/
+
+#gbp-client {
+	margin-left:0.5em;
+	margin-right: 0.5em;
+}
+
+#gbp-client-version-list {
+	margin-left:0.5em;
+}
+
+#client-legend {
+	display:block;
+	margin-top:0;
+	width:100%;
+}
+
+#client-fields-left {
+	margin-top:0;
+	width:25%;
+	float:left;
+	vertical-align: top;
+}
+
+#client-fields-right {
+	margin-left:28%;
+}
+
+/* client and property delete buttons that are hidden by default */
+
+#property-delete, #client-delete {
+	display:none;
+}
+
+
+/* in client, the top-left label pushes down the left column, so remove it */
+
+#client-subfields-left label {
+	margin-top:0;
+}
+
+/* lock control on property edit page */
+
+#lock input {
+	display:inline;
+}
+
+#gbp-required input, select {
+	display:inline;
+}
+
+/* client-property table */
+
+#client-property-table td label {
+	display:inline;
+}
+
+#client-property-table td input {
+	display:inline;
+}
+
+
+/**
+ * highlight a table row in primary green,
+ * used for 'new' data entry
+ */
+.row-super-highlight {
+	background-color:#0C0;
+}
+
+/*
+ * highlight a table row in dull green
+ */
+.row-highlight {
+	color:white;
+	background-color:#063;
+	padding-bottom:0.3em;
+}
+	
+/*
+ * un-highlight a row
+ */
+.row-unhighlight {
+	color:black;
+	background-color:#eee;
+	
+}
+
+/*
+ * select a row - this style fires when a row is in
+ * editing mode, rather than 'new' mode
+ */
+.row-select {
+	color:black;
+	background-color:#FF9;
+}
+
+.row-unselect {
+	color:black;
+	background-color:#eee;
+}

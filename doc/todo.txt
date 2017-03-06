@@ -1,0 +1,477 @@
+/**
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP INITIALIZR, OUTPUT, INPUT
+ * -------------------------------------
+ *
+ * REFWIN - use centering used in modal dialog, refactor
+ * 
+ * GENERAL - use GBPInitializr.isNumber() throughout
+ *
+ * UTILITY - DON'T ASSUME INCOMING IS A STRING (ALWAYS clean() not clean_str())
+ *
+ * UTILITY - SCAN FOR EMPTY STRINGS IN CLIENTS_PROPERTIES
+ * UTILITY - SCAN FOR INVALID CONFIDENCE, NUMTESTS
+ *
+ * RIGHT NOW, CLIENT-PROPERTY-VERSIONS WILL STORE AN EMPTY STRING FOR A STRING
+ * VALUE, AND COUNT IT AS A VALUE
+ *
+ * SHOULD NOT STORE USER-AGENT, and anything else specific to a specific to a client session
+ * e.g. the suite of browser plugins installed
+ *
+ * ADD A "clear all" BUTTON TO client-properties
+ *
+ * If we change the version number in 'clients_versions' table, warn the user that
+ * all the 'clients_properties' will remain mapped to the new version.
+ *
+ * client-version HAS to be numeric, ensure that it always is....
+ *
+ * run checkComplete() in client_versions.php AFTER we fill in the comments. Having
+ * the <select> makes it too easy to get multiple rows. As an alternative, scan
+ * a row being added, and, if its content exactly matches the previous row, zap it.
+ *
+ * PDO->commit(); //NOT USED YET
+ * 
+ * NEVER CALLED
+ * run a search in DreamWeaver with all function names, find the "orphans" that are
+ * never called in code, and move to deprecated file in /dev
+ *
+ * GBP_BASE - is_valid_table()
+ *
+ * GBP_BASE.php
+ * - make get_lowest_id() and get_highest_id() for selecting default records
+ * - $statement->bindValue(':table_name', $table_name, PDO::PARAM_STR); //ADD THIS
+ *
+ * api.php
+ * - API.PHP SHOULD CLEAN STRINGS!!!!!!
+ *
+ * calendar.js
+ * - re-write calendar so it doesn't have the 'blur' problem
+ *
+ * gbpinitializr.js
+ * - .showPoppup should be a modal window
+ * - CALENDAR - not hidden correctly, re-write calendar!
+ * - GBPInitializr.applyValidServerInsert() where useful (right now only in property)
+ * - GBPInitializr.delay() - only in property text update fields now
+ * - Ajax processes 403 errors (check)
+ *
+ * - FIX the calendar in References, also load the Calendar polyfill in all cases
+ * 
+ * utility_form.php
+ * - regularize HTTP header detects into footprints, and set up appropriate detection
+ * - check over GBP names for everything
+ * - validate if Property names are unique in Utility menu
+ * - In Utility, add something that shows the % of defined properties for a client
+ *
+ * - RUN SEARCH FOR USER-AGENT in ua-data loader
+ *
+ * - use browsershots to test additional browsers (auto-ajax send)
+ * - modify full_tests form for auto-submission
+ *
+ * - In Utility, FIND AND CATALOG ALL
+ * - - locked properties
+ * - - clients with "future" in their searchgroup
+ *
+ * - In Utility, SET SEARCHGROUP WITH BROWSER STATS!!!
+ *
+ * compile_form.php
+ * - make multi compile screen for the compiler.
+ * - In references, "Done" instead of "close"
+ *
+ *
+ *
+ * ----------------------------------------------
+ * TEMPORARY NAMING CONVENTIONS (substrings) IN VERSION 1
+ * ----------------------------------------------
+ * in version 1, Property naming is just descriptive and unique.
+ * 
+ * 1. All property names must be unique.
+ * 
+ * 2. Substrings at the END of the name (SUFFIX) define special features.
+ *    Substrings at the BEGINNING of the name define a component.
+ *
+ * 3. All properties under a component WILL NOT have the same substring
+ *
+ * 4. the GBP object does not try to sort by component or datatype.
+ *
+ * 5. Prefixes
+ *    a. "css"   (csssize, cssfloat, cssstatic, SVG in css=csssvg)
+ *    b. "geo"   (latitude and longitude)
+ *    c. "input" (all HTML 5 form inputs)
+ *    d. "audio" (all audio formats)
+ *    e. "video" (all video formats)
+ *    f. NOTE: images are NOT namespaced, but they would be "img"
+ *    g. "svg"   (all SVG formats, e.g. fonts in SVG)
+ *    h. "device"(client device properties)
+ *    i. "http"  (stuff in HTTP headers)
+ *    j. "server"(server-side stuff)
+ *
+ * 5. properties may have a SUFFIX to make them easy to find
+ *    a. "size"  (viewport, device, browser window size, in Dimensions)
+ *    b. "obj"   (objects)
+ *    c. "date"  (objects using Date type)
+ *    f. "tag"   (HTML markup names that might overlap)
+ *    g. "form"  (HTML input markup in forms, e.g. 'dateform')
+ *    h. "type"  (a property that is enumerated, e.g. prefix type, device type)
+ *    
+ *
+ * 6. Dimensions and geolocation are "hard-coded" for extraction in bootstrap and gbp PHP
+ 
+ * 7. Non-simple datatypes (e.g. dimensions, coordinates) are split according to the 2.0 convention
+ *
+ * -----------------------------------------------
+ * NAMING CONVENTIONS IN VERSION 2
+ * -----------------------------------------------
+ * array1[DATATYPE-COMPONENT-PROPERTYLOCATION]....features relevant to that component
+ * if the datatype was NOT a single value (e.g. geolocation), values would
+ * be separated by hyphens, e.g.
+ * -----------------------------------------------
+ * GBP Property Key structure:
+ 
+ * FIRST:  DATATYPE
+ * SECOND: COMPONENT
+ * THIRD:  PROPERTY name
+ * FOURTH: LOCATION (no hyphen)
+ *
+ * NOTE:   it may make sense for the server-side PHP to "pop" out the LOCATION from the
+ *         end of the string or array for the location. That way, the server, can process
+ *         things that must happen on the server, and ignore client-side processing. This
+ *         will speed up processing on the server-side
+ *
+ * NOTE:   strpos() is MUCH FASTER than converting to an array, and looking up in the array
+ * NOTE:   bitwise operators in PHP are SLOWER than just dividing
+ * NOTE:   looking EXPLICITLY for strings, e.g. (if $b == 'd-') is FASTEST OF ALL
+ *         in other words, looking for 'd-' will be faster than explode() and scanning the array
+ * -----------------------------------------------
+ * Example:
+ * 
+ * array1[d-A-viewport1] = "100-200";
+ * -----------------------------------------------
+ * first  "1"   = LOCATION server-side
+ * second "d-"  = COMPONENT, CSS2
+ * third  "A-"  = DATATYPE, datatype is boolean
+ * programs "know" how to proces a datatype
+ * -----------------------------------------------
+ * Conventions:
+ * -----------------------------------------------
+ * Position 1 (LOCATION DETECTED)
+ * 0-               client-side
+ * 1-               server-side (server hardware, network)
+ * 2-               in HTTP headers
+ * 3-               both
+ * 4-               user must view
+ * 5-               supplied by ISP
+ * 6-               cannot be detected
+ * 7-               in user-agent only
+ * 8-               in GBP configuration only
+ * (several positions are open)
+ * -----------------------------------------------
+ * Position 2 (COMPONENT)
+ * a-               audio formats
+ * b-               browser
+ * c-               CSS1
+ * d-               CSS2
+ * e-               CSS3
+ * f-               device hardware
+ * g-               ECMA
+ * h-               Green Boilerplate configuration
+ * i-               HTML and markup
+ * j-               HTML form controls
+ * k-               HTTP headers
+ * l-               Human factors (e.g. green office, Web Index)
+ * m-               image formats
+ * n-               ISP-derived information (e.g. data center green-ness)
+ * o-               JavaScript APIs
+ * p-               Network connections
+ * q-               Reference and Documentation
+ * r-               Server hardware
+ * s-               third-party tests
+ * t-               video formats
+ * u-               webfont formats
+ * (several positions are open)
+ * -----------------------------------------------
+ * Position 3 (DATATYPE)
+ * A-               Boolean     (ECMAScript Boolean type)
+ * B-               String      (ECMAScript String type)
+ * C-               Number      (ECMAScript Number type)
+ * D-               Date        (JavaScript Date type)
+ * E-               Object      (ECMAScript Object type)
+ * F-               Enum        (enumerated list of strings or numbers)
+ * G-               Geolocation (lat and long [and elevation] [and speed] in Number)
+ * H-               Timestamp   (Unix variety in Number)
+ * I-               Undefined   (ECMAScript undefined)
+ * J-               Dimensions  (X and Y [and Z] [and W] in Number)
+ * K-               Coordinates (X and Y [and Z] [and W])
+ * L-               Motion      (X and Y [and Z] [and W])
+ * M-               Address     (Geographic street address, city, state(region), state(region) code, country, country code, postal code)
+ * N-               Foreign key (Int in MySQL or similar DB)
+ * O-               Null        (ECMAScript NULL)
+ * (several positions are open)
+ *
+ * -----------------------------------------------
+ * GBP object
+ * -----------------------------------------------
+ * 
+ * 
+ * TODO: bootstrap.php - scan BACKWARDS through array. This means we would have to
+ * TODO: rewrite the compiled PHP arrays BACKWARDS in the compile operation, and
+ * TODO: scan in reverse for efficiency
+ *
+ * TODO: Use regexp modifiers to speed up repetitive analysis ('S' modifier)
+ * TODO: will have to replace '~' with '/' to use
+ * http://www.php.net/manual/en/reference.pcre.pattern.modifiers.php
+ *
+ * TODO: COOKIE SIZES FOR OLD BROWSERS (prevent crash if cookie write too big)
+ *
+ * TODO: adjust to style guide in "maintainable javascript" book
+ *
+ * TODO: need to support one function loaded for several detects. There should be a way of saying that
+ * a feature uses a common "base" function for detection. Examples include:
+ *
+ * - ECMAScript properties
+ * - form <input> tags
+ * - plugins
+ * 
+ * The data coming down for a property should list a base function. If any property function "sharing"
+ * that base function is included, the base function should also be included. The base function should
+ * then be deleted from GBP.
+ * 
+ * TODO: NEED TO SUPPORT CLIENT AND SERVER-SIDE OPERATION BY DEFINING ROOT
+ * NOT JUST "WINDOW"
+ * 
+ * in a server environment (which could be a tricked-up browser)
+ * http://timetler.com/2012/10/13/environment-detection-in-javascript/
+ *
+ * TODO: DEFINE A "root" object
+ * http://stackoverflow.com/questions/4224606/how-to-check-whether-a-script-is-running-under-node-js
+ * 
+ * DEBUG - check for consistent methods, DEBUG1, DEBUG2
+ *
+ * When a locked property is viewed, and we switch to "new property" it DOES NOT unlock
+ *
+ * Search function on "properties", any field. Implies we can create a list of 
+ * properties as output. Poppup window?
+ *
+ * Control which browsers are included in output, not just features!
+ *
+ * Write a routine that imports Modernizr, caniuse, other data into GBP
+ *
+ * Ensure that if a version has NO unique properties attached to it, it isn't 
+ * written. Ensure that we get interpolation if we get an intermediate browser.
+ *
+ * Write validation scripts
+ *
+ * Write a table breaking down browser, version and defined features, similar to caniuse.com
+ * 
+ * Write all "locked" properties into an output file used by the other programs
+ *
+ * write "inductive chain" which infers properties based on feature dependencies
+ *
+ * write "timeline chain" which infers properties based on year of browser release
+ * 
+ * adjust output script to combine data from all available feature libraries (modernizr, caniuse)
+ * 
+ * reserved words writer - create list of "locked" properties for all programs
+ *
+ * 
+ * We might want to create GBP using hasJS and ua-feature.php
+ * https://github.com/phiggins42/has.js
+ *
+ * Add tests from browserscope to our JS API properties
+ *
+ * Get "hard" user-agent regexes from ua-parser (we have a few in IE)
+ * 
+ * 
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP INITIALIZR, DATABASE
+ * --------------------------------
+ *
+ * TODO: add "preferred polyfill" as a link
+ *
+ * TODO: link "references" to tables. Need a strategy to specify table we're linking
+ * to in the database. Possibly a script that parses all tables and assigns number - table names
+ * to a new reference table in the db.
+ *
+ * Have server-side cache information it pulls from:
+ * HTTP headers
+ * RDF file from profile header
+ * 
+ * Integrate WUFRL support
+ * http://wurfl.sourceforge.net/php_index.php
+ *
+ *
+ * In "properties", add a date for "first appearance" of a property on the web. If 
+ * present, this will make it easier to infer browser abilities
+ * 
+ * 
+ * Handle hyperlinked references to all documents
+ * we need references for
+ * - clients
+ * - client-versions
+ * - client-version-properties
+ * - external data sources
+ * - properties
+ * 
+ * Need descriptive reference for all client-property-version listings
+ * 
+ * 
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP INITIALIZR, CSS 
+ * -------------------------------
+ * 
+ * 
+ * Use "whispies" in background, similar to CS6
+ * 
+ * 
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP INITIALIZR, ALL INTERFACE
+ * -------------------------------------
+ * 
+ * disable "backspace" on our Ajax screens jumping us to a previous screen
+ * 
+ * editing all controls and text fields should LOCK during Ajax communication
+ * 
+ * JS support for "location" and "dimensions" objects
+ * 
+ * always sort "new property" to the top of the list
+ * 
+ * add "sort by title" to ALL the returned selects in Initializr
+ * 
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP INITIALIZR, PROPERTIES INTERFACE
+ * --------------------------------------------
+ * 
+ * Write down interface problems for each section
+ * 
+ * In "dependencies", the current property should be excluded from the list 
+ * to avoid circular references.
+ * 
+ * 
+ * 
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP INITIALIZR, CLIENT INTERFACE
+ * ---------------------------------------------
+ * 
+ * keypress should highlight client row
+ * 
+ * need a "new client" table. table needs to load after creating a new client
+ * 
+ * fix problem with entering new client. Multiple inserted table rows mess 
+ * things up. If we reload, the extra cruft disappears. 
+ * 
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP INITIALIZR, CLIENT-PROPERTY INTERFACE
+ * ------------------------------------------------
+ *
+ * New spinner, new GBP symbol
+ *
+ * Make "polyfill" library separate, use this polyfill as a guide
+ * https://github.com/inexorabletash/polyfill
+ *
+ * Common console.log between initializr and reporter
+ *
+ * Add our JSON and Storage polyfills to polyfill library
+ * 
+ * Find origin of new client problem update
+ *
+ * 
+ * Need a "clear" button that wipes out all client-properties
+ *
+ * ECMA should list specific polyfills (e.g. Object.keys that need to be filled)
+ *
+ *
+ * TODO: figure organizational hierarchy for elements ina component (e.g. CSS would have
+ * text, lists, images...)
+ *
+ * 
+ * TODO: figure out client selection screen
+ *
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP REPORTER (gbp_bootstrap.php, ua_analyze.php)
+ * --------------------
+ *
+ * TODO: JS_TESTS CRASHING ON FULLTESTS - FIND THE OFFENDING FUNCTION!
+ *
+ * TODO: Research use of string ob_gzhandler ( string $buffer , int $mode ) gzip, deflate
+ *
+ * TODO: if we store function tests, store by date when said function test could first work. This
+ * could also be used to 'sort' the functions so early tests happen before later tests
+ *
+ * TODO: dependencies in initializr should require that a test required for a "later" function
+ * (e.g. a form input type) always load the earlier test (the dom1 test)
+ *
+ * TODO: in GBP object, use an array for createElement() operations. That way, several
+ * functions (e.g. all the <input> tests) can share the element. Delete the array
+ * at the end of the tests.
+ * 
+ * in gbp_bootstrap.php
+ * TODO: use __FILE__ or __DIR__
+ * TODO: force-load GBP if needed by sending client cookie
+ * TODO: add in client-side cookie upload for localStorage browsers
+ * TODO: add in PHP server-side memcache for data
+ * TODO: we will always get back whether JSON and Storage were native or a polyfill. We can use this
+ * to update our server database.
+ * 
+ * TODO: if we get a cookie, the gbp property 'javascript' must be true. We can use this to update our
+ * server database.
+ * 
+ * TODO: send http cookie with secureHTTP header
+ * TODO: if the uaHash comes back differently than what we expect, we should
+ * re-scan.
+ * 
+ * TODO: analyze at PHP level if we have a valid XHTML or HTML page. Report to eco-grader if it is wrong.
+ *
+ * in ua_analyze.php
+ * 
+ * TODO: sniff HTTP headers for additional useful information in 
+ * second-stage mobile detection
+ * 
+ * TODO: sniff HTTP headers to see what output browser will accept. 
+ * use to define browser features.
+ *
+ * TODO: special analysis for crawlers, e.g., googlebot
+ *
+ * Version Number should be part of the default GBP object
+ * 
+ * If a feature is not present, and we attach a JavaScript function, we want the 
+ * resulting test results sent back to the server. The server should just store 
+ * the result as a file in an unconnected table.
+ *
+ * server time should not come from cookie, or if it does, the Storage should 
+ * be the equivalent "retrieval from localStorage"
+ * 
+ * Ability to toggle "full tests" during a GBP report. It should load EVERY 
+ * JS file, assuming said JS function names correspond to GBP properties
+ * 
+ * Export GBP configuration data, and add to the reporter screen 
+ * 
+ * 'require.js' for our loader
+ * https://github.com/jrburke/requirejs
+ * 
+ * 
+ * 
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP FOOTPRINT
+ * ---------------------
+ * 
+ * Integrate with MightyBytes EcoGrader
+ * 
+ * 
+ * 
+ * ------------------------------------------------------------------------- 
+ * TODO - GBP TOOLS
+ * -----------------
+ *
+ * TODO: BrowserSwarm testing: http://www.sitepoint.com/automated-javascript-testing-browserswarm/
+ * 
+ * Include EcoGrader Info
+ *
+ * Include GBP configuration data (also need in database output)
+ * 
+ * 
+ * ------------------------------------------------------------------------- 
+ * 
+ * 
+ * 
+ * ------------------------------------------------------------------------- 
+ *
+ */

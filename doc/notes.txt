@@ -1,0 +1,21 @@
+/**
+ * ------------------------------------------------------------------------- 
+ * NOTES
+ * -------
+ *
+ * version in clients_versions MUST evaluate to a number.
+ * version in clients_versions CANNOT be zero.
+ *
+ * 
+ * using a tilde '~' for !== -1  evaluated to true has very wide support, shorten stuff with
+ * if(mystring.indexOf("something") !== -1) to if(~mystring.indexOf("something"))
+ * 
+ * Several old browsers couldn't handle stuff like
+ * navigator.appVersion.toLowerCase().indexOf("something")
+ * - Safari 3
+ * - HotJava
+ * it was necessary to create the lowercased string first, then call it
+ * 
+ * 
+
+*/
