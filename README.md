@@ -28,7 +28,7 @@ The first step in using GBP Initializr is to create a list of supported feature 
 
 In the example, the JavaScript API Element.querySelectorAll() has been selected. It includes a short description, links to relevant websites, and equivalent names for properties in Modernizr and Caniuse databases. Finally, properties can be made dependent - the presence of Element.querySelectorAll() depends on Element.querySelector() support. This allows property inference for browsers that haven't been tested yet for a property.
 
-![Define Web Browser Client](doc/images/initializr_property_02.png)
+![Define Web Browser Client](doc/images/initializr_client_property_02.png)
 
 The second screen allows definition of new web browsers and versions for those browsers in the database. Like the Properties dialog, it allows storing comments and references. It also saves the release data for the version (which allows inference of obsolesence) and grouping into broad categories (ancient, mobile, common...).
 
