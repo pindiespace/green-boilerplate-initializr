@@ -1,4 +1,4 @@
-## ![Green Boilerplate Initializr](assets/logo.png)
+## ![Green Boilerplate Initializr](doc/images/logo.png)
 
 ...A database application generating efficient feature detection scripts with maximal inclusive design patterns.
 
