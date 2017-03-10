@@ -69,6 +69,10 @@
 
 **This dialog** shows the interface for importing feature tests from the developer website. Each time the site is loaded, the feature tests are stored in a MySQL database. Individual tests can be selected for import and merging with the local database, based on the user-agent.
 
+![Green Boilerplate Initializr Compiler](doc/images/initializr_compiler_08.png)
+
+**The final screen** shows the interface for selecting features that the GBP Initializr compile step would include in the final object. Since the output file typically would have mostly boolean results for feature detects, there isn't a penalty for including the complete feature set. The resulting files were created as fast-lookup PHP arrays and/or JavaScript JSON objects that could be injected 'on the fly' when a particular browser access a website running GBP.
+
 ## Conclusions
 
  **The biggest problem** with the system was the compile step. The steps needed to query the database to generate a complete list of features for all browsers and their versions packed in an efficient 'array on the disk' format allowed by PHP turned out to take lots of CPU power. As the database grew, computing time went up nearly exponentially. The current database takes many minutes to generate the 'array on the disk' files used by the [Green Boilerplate](http://github.com/pindiespace/green-boilerplate) object.
