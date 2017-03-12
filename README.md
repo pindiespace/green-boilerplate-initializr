@@ -4,7 +4,7 @@
 
 ## The Problem
 
-**[Green Boilerplate](http://github.com/pindiepsace/green-boilerplate-initializr)** was a project I worked on from 2011 to 2014 alongside with developing a theory of Sustainable web design. 
+**[Green Boilerplate](http://github.com/pindiespace/green-boilerplate)** was a project I worked on from 2011 to 2014 alongside with developing a theory of Sustainable web design. 
 
 **This project** was developed to support GBP. It required generating a comprehensive list of web browsers, their features (HTML, CSS< and JavaScript APIs) and methods for detecting those features (JavaScript functions).
 
